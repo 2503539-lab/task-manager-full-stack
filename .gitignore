@@ -1,0 +1,9 @@
+# Ignore database configuration with credentials
+config/db.php
+
+# Ignore other sensitive files
+*.log
+.env
+.DS_Store
+Thumbs.db
+
