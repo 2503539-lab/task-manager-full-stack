@@ -1,13 +1,28 @@
 <?php
-require_once 'config/db.php';
-include 'includes/header.php';
+require_once(__DIR__ . '/config/db.php');
+include __DIR__ . '/includes/header.php';
 
 // Fetch all tasks from database
 $sql = "SELECT * FROM tasks ORDER BY created_at DESC";
-$result = $conn->query($sql);
+$result = $mysqli->query($sql);
 ?>
 
 <div class="container my-5">
+    <!-- Success/Error Messages -->
+    <?php if (isset($_GET['success'])): ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> <?php echo htmlspecialchars($_GET['success']); ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <?php endif; ?>
+    
+    <?php if (isset($_GET['error'])): ?>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle"></i> <?php echo htmlspecialchars($_GET['error']); ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <?php endif; ?>
+    
     <div class="row">
         <div class="col-lg-12">
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -25,8 +40,8 @@ $result = $conn->query($sql);
     <div class="row mb-4">
         <?php
         $total_tasks = $result->num_rows;
-        $completed_tasks = $conn->query("SELECT COUNT(*) as count FROM tasks WHERE status = 'completed'")->fetch_assoc()['count'];
-        $pending_tasks = $conn->query("SELECT COUNT(*) as count FROM tasks WHERE status = 'pending'")->fetch_assoc()['count'];
+        $completed_tasks = $mysqli->query("SELECT COUNT(*) as count FROM tasks WHERE status = 'completed'")->fetch_assoc()['count'];
+        $pending_tasks = $mysqli->query("SELECT COUNT(*) as count FROM tasks WHERE status = 'pending'")->fetch_assoc()['count'];
         ?>
         
         <div class="col-md-4 mb-3">
@@ -119,17 +134,19 @@ $result = $conn->query($sql);
                                             </div>
                                         </td>
                                         <td>
-                                            <a href="edit_task.php?id=<?php echo $row['id']; ?>" 
-                                               class="btn btn-sm btn-outline-primary" 
-                                               title="Edit">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
-                                            <a href="delete_task.php?id=<?php echo $row['id']; ?>" 
-                                               class="btn btn-sm btn-outline-danger delete-btn" 
-                                               title="Delete"
-                                               onclick="return confirm('Are you sure you want to delete this task?');">
-                                                <i class="bi bi-trash"></i>
-                                            </a>
+                                            <div class="actions">
+                                                <a href="edit_task.php?id=<?php echo $row['id']; ?>" 
+                                                   class="btn btn-sm btn-outline-primary" 
+                                                   title="Edit">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                                <a href="delete_task.php?id=<?php echo $row['id']; ?>" 
+                                                   class="btn btn-sm btn-outline-danger delete-btn" 
+                                                   title="Delete"
+                                                   onclick="return confirm('Are you sure you want to delete this task?');">
+                                                    <i class="bi bi-trash"></i>
+                                                </a>
+                                            </div>
                                         </td>
                                     </tr>
                                     <?php endwhile; ?>
@@ -194,7 +211,6 @@ $result = $conn->query($sql);
 </div>
 
 <?php
-$conn->close();
-include 'includes/footer.php';
+$mysqli->close();
+include __DIR__ . '/includes/footer.php';
 ?>
-
