@@ -1,5 +1,9 @@
 <?php
-require_once __DIR__ . '/config/db.php';
+require_once 'config/config.php';
+require_once 'config/db.php';
+
+// Require login to access this page
+requireLogin();
 
 // Check if ID is provided
 if (!isset($_GET['id']) || empty($_GET['id'])) {
