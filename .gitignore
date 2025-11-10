@@ -1,9 +1,17 @@
 # Ignore database configuration with credentials
 config/db.php
 
+# Ignore Composer dependencies
+/vendor/
+composer.lock
+
 # Ignore other sensitive files
 *.log
 .env
 .DS_Store
 Thumbs.db
+
+# Ignore IDE files
+.vscode/
+.idea/
 
