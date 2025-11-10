@@ -1,0 +1,120 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Login - Task Manager{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .login-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        overflow: hidden;
+        max-width: 450px;
+        width: 100%;
+    }
+    .login-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 2rem;
+        text-align: center;
+        color: white;
+    }
+    .login-body {
+        padding: 2rem;
+    }
+    .btn-login {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        padding: 12px;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="login-card">
+                <div class="login-header">
+                    <h2 class="mb-0">
+                        <i class="bi bi-check2-square"></i> Task Manager
+                    </h2>
+                    <p class="mb-0 mt-2">Please login to continue</p>
+                </div>
+                
+                <div class="login-body">
+                    {% if error is defined %}
+                        <div class="alert alert-danger" role="alert">
+                            <i class="bi bi-exclamation-triangle"></i> {{ error }}
+                        </div>
+                    {% endif %}
+                    
+                    {% if success is defined %}
+                        <div class="alert alert-success" role="alert">
+                            <i class="bi bi-check-circle"></i> {{ success }}
+                        </div>
+                    {% endif %}
+                    
+                    <form method="POST" action="login.php">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">
+                                <i class="bi bi-person"></i> Username or Email
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="username" 
+                                   name="username" 
+                                   required 
+                                   autofocus
+                                   value="{{ username|default('') }}">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">
+                                <i class="bi bi-lock"></i> Password
+                            </label>
+                            <input type="password" 
+                                   class="form-control" 
+                                   id="password" 
+                                   name="password" 
+                                   required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-login w-100">
+                            <i class="bi bi-box-arrow-in-right"></i> Login
+                        </button>
+                    </form>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="text-center">
+                        <p class="text-muted small mb-2">Demo Credentials:</p>
+                        <p class="mb-0">
+                            <strong>Username:</strong> admin<br>
+                            <strong>Password:</strong> admin123
+                        </p>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <a href="register.php" class="text-decoration-none">
+                            <i class="bi bi-person-plus"></i> Create an account
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
