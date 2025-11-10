@@ -80,9 +80,19 @@ $(document).ready(function() {
     
     // Form validation
     $('form').on('submit', function(e) {
-        const title = $('#title').val().trim();
+        // Check for reCAPTCHA in form
+        const recaptchaResponse = grecaptcha.getResponse();
+        const hasRecaptcha = $(this).find('.g-recaptcha').length > 0;
         
-        if (title === '') {
+        if (hasRecaptcha && !recaptchaResponse) {
+            e.preventDefault();
+            alert('Please complete the reCAPTCHA verification');
+            return false;
+        }
+        
+        // Validate task title for add task form
+        const title = $('#title').val().trim();
+        if ($(this).attr('action') === 'add_task.php' && title === '') {
             e.preventDefault();
             alert('Please enter a task title');
             $('#title').focus();

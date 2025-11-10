@@ -46,6 +46,11 @@ function requireLogin() {
 
 // Verify reCAPTCHA
 function verifyRecaptcha($response) {
+    // Check if response is empty
+    if (empty($response) || trim($response) === '') {
+        return false;
+    }
+    
     $url = 'https://www.google.com/recaptcha/api/siteverify';
     $data = [
         'secret' => RECAPTCHA_SECRET_KEY,
@@ -57,15 +62,28 @@ function verifyRecaptcha($response) {
         'http' => [
             'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
             'method'  => 'POST',
-            'content' => http_build_query($data)
+            'content' => http_build_query($data),
+            'timeout' => 10
         ]
     ];
     
-    $context  = stream_context_create($options);
-    $result = file_get_contents($url, false, $context);
-    $resultJson = json_decode($result);
+    $context = stream_context_create($options);
+    $result = @file_get_contents($url, false, $context);
     
-    return $resultJson->success;
+    // If API call failed, reject the request
+    if ($result === false) {
+        return false;
+    }
+    
+    $resultJson = json_decode($result, true);
+    
+    // Check if JSON decode was successful and success field exists
+    if (json_last_error() !== JSON_ERROR_NONE || !isset($resultJson['success'])) {
+        return false;
+    }
+    
+    // Return true only if Google confirms the CAPTCHA was solved
+    return $resultJson['success'] === true;
 }
 
 // CSRF Token functions
