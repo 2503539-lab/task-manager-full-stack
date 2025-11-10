@@ -1,8 +1,19 @@
 <?php
-require_once __DIR__ . '/config/db.php';
+require_once 'config/config.php';
+require_once 'config/db.php';
+
+// Require login to access this page
+requireLogin();
 
 // Check if form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Verify reCAPTCHA
+    $recaptcha_response = $_POST['g-recaptcha-response'] ?? '';
+    if (!verifyRecaptcha($recaptcha_response)) {
+        header("Location: index.php?error=Please complete the reCAPTCHA verification");
+        exit();
+    }
+    
     // Sanitize and validate input to prevent XSS
     $title = htmlspecialchars(trim($_POST['title']), ENT_QUOTES, 'UTF-8');
     $description = htmlspecialchars(trim($_POST['description']), ENT_QUOTES, 'UTF-8');
