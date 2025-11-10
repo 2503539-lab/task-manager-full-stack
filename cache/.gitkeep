@@ -1,0 +1,3 @@
+# Cache directory for Twig templates
+# This file ensures the directory is tracked by Git
+
